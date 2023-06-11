@@ -1,7 +1,9 @@
 import { getStudentUser, getTeacherUser, studentSignUp, teacherSignUp } from "../services/user.js";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
-const jwt_secret_key = "perfect_peace";
+const jwt_secret_key = process.env.JWT_KEY;
 
 const signup = async (req, res, next) => {
     const { indexNumber, password } = req.body;
