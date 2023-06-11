@@ -29,7 +29,6 @@ const getStudentClass = async (id) => {
             student_id: id
         }
     });
-
 }
 
 const getTeacherDetails = async (id) => {
