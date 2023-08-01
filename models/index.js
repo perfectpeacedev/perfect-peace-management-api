@@ -67,9 +67,6 @@ Student.hasMany(KgCalcValues, { as: 'kgCalcValues', foreignKey: 'studentId' });
 Notification.belongsTo(Student, { as: 'student', foreignKey: 'studentId' });
 Student.hasMany(Notification, { as: 'notifications', foreignKey: 'studentId' });
 
-Parent.hasMany(Student, { as: 'student', foreignKey: 'parentId' });
-Student.belongsTo(Parent, { as: 'parent', foreignKey: 'parentId' });
-
 SalaryPayment.belongsTo(Salary, { as: 'salary', foreignKey: 'salaryId' });
 Salary.hasMany(SalaryPayment, { as: 'salaryPayments', foreignKey: 'salaryId' });
 
@@ -78,6 +75,11 @@ Student.hasMany(StudentMarks, { as: 'studentMarks', foreignKey: 'studentId' });
 
 StudentMarks.belongsTo(Class, { as: 'class_', foreignKey: 'studentId' });
 Class.hasMany(StudentMarks, { as: 'studentMarks', foreignKey: 'studentId' });
+
+Teacher.belongsTo(Class, {as: 'class_', foreignKey: 'classId'})
+Class.hasOne(Teacher, { as: 'teacher', foreignKey: 'classId' });
+
+Student.belongsTo(Parent, {as: 'parent', foreignKey: 'parentId'})
 
 StudentResult.belongsTo(Student, { as: 'student', foreignKey: 'studentId' });
 Student.hasMany(StudentResult, { as: 'studentResults', foreignKey: 'studentId' });

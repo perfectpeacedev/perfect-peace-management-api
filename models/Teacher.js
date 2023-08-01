@@ -74,12 +74,12 @@ const _ = sequelize.define('teacher', {
       field: 'account_number'
     },
     dateUpdated: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
       field: 'date_updated'
     },
     dateRegistered: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
       field: 'date_registered'
     }

@@ -48,7 +48,7 @@ const _ = sequelize.define('parent', {
     sequelize,
     tableName: 'Parent',
     schema: 'dbo',
-    timestamps: true,
+    timestamps: false,
     indexes: [
       {
         name: "PK_Parent",
