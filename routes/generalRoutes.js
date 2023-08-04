@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addResult, addStaff, addStudent, deleteResult, deleteStaff, deleteStudent, fetchAllStaff, fetchAllStudents, fetchClassMarks, fetchClassResult, fetchNews, fetchUserDetails, resetPin, updatePassword, updateStaff, updateStudent } from "../controllers/generalController.js";
+import { addClass, addResult, addStaff, addStudent, deleteResult, deleteStaff, deleteStudent, fetchAllStaff, fetchAllStudents, fetchAttendance, fetchClassMarks, fetchClassResult, fetchNews, fetchUserDetails, markAttendance, resetPin, updatePassword, updateStaff, updateStudent } from "../controllers/generalController.js";
 import { authenticateUser } from "../utils/middlewares.js";
 import { fetchClass, fetchSubject } from "../controllers/onlyTeacherController.js";
 
@@ -15,10 +15,14 @@ router.get("/students", fetchAllStudents);
 router.get("/staff", fetchAllStaff);
 router.get("/student-results", fetchClassResult);
 router.get("/student-marks", fetchClassMarks);
+router.get("/student-attendance", fetchAttendance);
 
 router.post("/add-student", addStudent);
+router.post("/add-class", addClass);
 router.post("/add-staff", addStaff);
 router.post("/add-result", addResult);
+
+router.post("/mark-attendance", markAttendance);
 
 router.put("/update-student/:student_id", updateStudent);
 router.put("/update-staff/:teacher_id", updateStaff);

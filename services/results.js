@@ -89,7 +89,7 @@ const getClassMarks = async (data) => {
         AND YEAR(s.date)=YEAR(Student_marks.date)
         AND s.subject_id=Student_marks.subject_id 
         AND s.total_score > Student_marks.total_score
-    ) AS [subjectosition]
+    ) AS [subjectPosition]
     FROM
       [dbo].[Student_marks]
     WHERE
@@ -104,7 +104,6 @@ const getClassMarks = async (data) => {
   });
   
   return results;
-
 };
 
 // const getClassMarks = async (data) => {

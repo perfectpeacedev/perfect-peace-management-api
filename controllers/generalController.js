@@ -1,3 +1,5 @@
+import { createClassAttendance, deleteAttendance, getAttendance } from "../services/attendance.js";
+import { createClass } from "../services/classes.js";
 import { getNews } from "../services/news.js";
 import {
   getStudentContact,
@@ -62,6 +64,17 @@ const fetchClassMarks = async (req, res, next) => {
   }
 };
 
+const fetchAttendance = async (req, res, next) => {
+  const values = req.query;
+  try {
+    const data = await getAttendance(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const fetchClassResult = async (req, res, next) => {
   const values = req.query;
   try {
@@ -71,8 +84,8 @@ const fetchClassResult = async (req, res, next) => {
     const data = results.map((result) => {
         const { studentId } = result.dataValues;
         const studentMarks = marks.filter((mark) => {
-            if (mark.dataValues.studentId === studentId) {
-              return mark.dataValues;
+            if (mark.studentId === studentId) {
+              return mark;
             }
         });
 
@@ -112,6 +125,18 @@ const addStaff = async (req, res, next) => {
   }
 };
 
+const addClass = async (req, res, next) => {
+  const values = req.body;
+  console.log(values);
+  try {
+    const data = await createClass(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const addResult = async (req, res, next) => {
   const values = req.body;
   const marksData = values?.results;
@@ -122,6 +147,22 @@ const addResult = async (req, res, next) => {
       createResult(values),
     ]);
     return results;
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const markAttendance = async (req, res, next) => {
+  const values = req.body;
+
+  try {
+    // await deleteAttendance(values);
+    // const promises = values?.map((mark) => createClassAttendance(mark));
+    // const results = await Promise.allSettled([
+    //   ...promises
+    // ]);
+    // return results;
   } catch (error) {
     console.log(error);
     next(error);
@@ -279,14 +320,22 @@ export {
   fetchAllStaff,
   fetchClassResult,
   fetchClassMarks,
+  fetchAttendance,
+
   addStudent,
   addStaff,
+  addClass,
   addResult,
+
   updateStudent,
   updateStaff,
+
   deleteStudent,
   deleteStaff,
   deleteResult,
+
+  markAttendance,
+
   fetchNews,
   fetchUserDetails,
   resetPin,
