@@ -1,7 +1,9 @@
+import { getBusFee, getExpense, getExtraClasses, getFeeding } from "../services/account.js";
 import { createClassAttendance, deleteAttendance, getAttendance } from "../services/attendance.js";
 import { createClass } from "../services/classes.js";
 import { createFee, getFeesData, getOneFee, removeFee } from "../services/fee.js";
 import { getNews } from "../services/news.js";
+import { getOneAllowance, getOneDeduction, getOneSalary, getSalary, removeAllowance, removeDeductions, removeSalary } from "../services/payroll.js";
 import {
   getStudentContact,
   getTeacherContact,
@@ -20,6 +22,7 @@ import {
   getStaff,
   removeStaff,
 } from "../services/staff.js";
+import { createSubject, removeSubject } from "../services/subject.js";
 import {
   createStudent,
   editStudent,
@@ -133,6 +136,78 @@ const fetchClassResult = async (req, res, next) => {
   }
 };
 
+const fetchFeeding = async (req, res, next) => {
+  const values = req.query;
+  try {
+    const data = await getFeeding(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+const fetchExpense = async (req, res, next) => {
+  const values = req.query;
+  try {
+    const data = await getExpense(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+const fetchExtraClasses = async (req, res, next) => {
+  const values = req.query;
+  try {
+    const data = await getExtraClasses(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+const fetchBusFee = async (req, res, next) => {
+  const values = req.query;
+  try {
+    const data = await getBusFee(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+const fetchSalary = async (req, res, next) => {
+  try {
+    const data = await getSalary();
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+const fetchOneSalary = async (req, res, next) => {
+  const id = req.params.salary_id;
+  try {
+    const salary = await getOneSalary(id);
+    const deductions = await getOneDeduction(id);
+    const allowances = await getOneAllowance(id);
+
+    const data = {
+      ...salary,
+      ...deductions,
+      ...allowances,
+    }
+    res.json(data);
+  } catch (error) {
+    next(error)
+  }
+}
+
 const addStudent = async (req, res, next) => {
   const values = req.body;
   try {
@@ -161,6 +236,18 @@ const addClass = async (req, res, next) => {
   console.log(values);
   try {
     const data = await createClass(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const addSubject = async (req, res, next) => {
+  const values = req.body;
+  console.log(values);
+  try {
+    const data = await createSubject(values);
     res.json(data);
   } catch (error) {
     console.log(error);
@@ -292,6 +379,32 @@ const deleteFee = async (req, res, next) => {
   }
 }
 
+const deleteSubject = async (req, res, next) => {
+  const id = req.params.subject_id;
+  try {
+    const data = await removeSubject(id);
+    res.json(data);
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+const deleteSalary = async (req, res, next) => {
+  const id = req.params.salary_id;
+  try {
+    const data = await Promise.allSettled([
+      removeDeductions(id),
+      removeAllowance(id),
+      removeSalary(id)
+    ]);
+    res.json(data);
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
 //portal
 const fetchNews = async (req, res, next) => {
   try {
@@ -378,12 +491,19 @@ export {
   fetchAttendance,
   fetchFees,
   fetchOneFee,
+  fetchFeeding,
+  fetchExpense,
+  fetchExtraClasses,
+  fetchBusFee,
+  fetchSalary,
+  fetchOneSalary,
 
   addStudent,
   addStaff,
   addClass,
   addResult,
   addFee,
+  addSubject,
 
   updateStudent,
   updateStaff,
@@ -392,6 +512,8 @@ export {
   deleteStaff,
   deleteResult,
   deleteFee,
+  deleteSubject,
+  deleteSalary,
 
   markAttendance,
 
