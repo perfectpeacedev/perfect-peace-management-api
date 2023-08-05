@@ -1,37 +1,63 @@
-import { Class, FeeCheck, Student } from "../models/index.js";
+import { Class, Fee, FeeCheck, Student } from "../models/index.js";
+import { Op, literal } from "sequelize";
 
+const getFeesData = async (data) => {
+  const startDate = new Date(data.dateStart).toISOString();
+  const endDate = new Date(data.dateEnd).toISOString();
+  console.log(startDate);
+
+  if (data.all) {
+    return await Fee.findAll();
+  } else if (data.term) {
+    return await Fee.findAll({
+      where: {
+        datePaid: {
+          [Op.gte]: literal(`CONVERT(DATE, '${startDate}', 126)`),
+          [Op.lte]: literal(`CONVERT(DATE, '${endDate}', 126)`),
+        },
+        term: data.term,
+      },
+    });
+  } else {
+    return await Fee.findAll({
+      // limit: 5
+      where: {
+        datePaid: {
+          [Op.gte]: literal(`CONVERT(DATE, '${startDate}', 126)`),
+          [Op.lte]: literal(`CONVERT(DATE, '${endDate}', 126)`),
+        },
+      },
+    });
+  }
+};
 
 const getFeeCheck = async () => {
-    return await FeeCheck.findAll({
-        attributes: ["value"]
-    });
-}
+  return await FeeCheck.findAll({
+    attributes: ["value"],
+  });
+};
 
 const getFeeList = async (indexNumber) => {
-    const student = await Student.findOne({
-        where: {
-          student_id: indexNumber
-        },
-        attributes: ['class']
-      });
+  const student = await Student.findOne({
+    where: {
+      student_id: indexNumber,
+    },
+    attributes: ["class"],
+  });
 
-      if (student) {
-        const studentClass = student.class;
-  
-        const classDetails = await Class.findOne({
-          where: {
-            name: studentClass
-          }
-        });
-  
-        return classDetails;
-      } else {
-        return null;
-      }
-}
+  if (student) {
+    const studentClass = student.class;
 
+    const classDetails = await Class.findOne({
+      where: {
+        name: studentClass,
+      },
+    });
 
-export {
-    getFeeCheck,
-    getFeeList
-}
+    return classDetails;
+  } else {
+    return null;
+  }
+};
+
+export { getFeeCheck, getFeeList, getFeesData };

@@ -1,5 +1,6 @@
 import { createClassAttendance, deleteAttendance, getAttendance } from "../services/attendance.js";
 import { createClass } from "../services/classes.js";
+import { getFeesData } from "../services/fee.js";
 import { getNews } from "../services/news.js";
 import {
   getStudentContact,
@@ -64,10 +65,29 @@ const fetchClassMarks = async (req, res, next) => {
   }
 };
 
+//not complete
 const fetchAttendance = async (req, res, next) => {
   const values = req.query;
   try {
     const data = await getAttendance(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const fetchFees = async (req, res, next) => {
+  const values = req.query;
+  try {
+    //sample  values
+    // const values = {
+    //   dateStart: '2022-09-26',
+    //   dateEnd: '2023-02-01',
+    //   all: false,
+    //   term: ""
+    // }
+    const data = await getFeesData(values);
     res.json(data);
   } catch (error) {
     console.log(error);
@@ -321,6 +341,7 @@ export {
   fetchClassResult,
   fetchClassMarks,
   fetchAttendance,
+  fetchFees,
 
   addStudent,
   addStaff,
