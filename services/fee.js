@@ -1,6 +1,56 @@
 import { Class, Fee, FeeCheck, Student } from "../models/index.js";
 import { Op, literal } from "sequelize";
 
+const createFee = async (data) => {
+  const response = await Fee.create({
+    studentId: data?.studentId,
+    classId: data?.classId,
+    total: data?.total,
+    paid: data?.paid,
+    remaining: data?.remaining,
+    paymentMode: data?.paymentMode,
+    amountInWords: data?.amountInWords,
+    datePaid: data?.datePaid,
+    term: data?.term,
+  });
+
+  //update student data
+  const updateStudent = await Student.update(
+    {
+      feesPaid: data?.paid,
+      feesOwing: data?.remaining
+    },
+    {
+      where: {
+        student_id: data?.studentId,
+      },
+    }
+  )
+
+  console.log(updateStudent)
+
+  return response;
+}
+
+const removeFee = async (id) => {
+  const response = await Fee.destroy({
+    where: {
+      feeId: id
+    }
+  })
+
+  return response;
+}
+
+const getOneFee = async (id) => {
+  const response = await Fee.findOne({
+    where: {
+      feeId: id
+    }
+  })
+  return response;
+}
+
 const getFeesData = async (data) => {
   const startDate = new Date(data.dateStart).toISOString();
   const endDate = new Date(data.dateEnd).toISOString();
@@ -60,4 +110,4 @@ const getFeeList = async (indexNumber) => {
   }
 };
 
-export { getFeeCheck, getFeeList, getFeesData };
+export { createFee, removeFee, getFeeCheck, getFeeList, getFeesData, getOneFee };
