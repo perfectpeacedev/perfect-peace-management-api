@@ -1,9 +1,9 @@
 import { getBusFee, getExpense, getExtraClasses, getFeeding } from "../services/account.js";
-import { createClassAttendance, deleteAttendance, getAttendance } from "../services/attendance.js";
+import { createClassAttendance, removeAttendance, getAttendance } from "../services/attendance.js";
 import { createClass } from "../services/classes.js";
 import { createFee, getFeesData, getOneFee, removeFee } from "../services/fee.js";
 import { getNews } from "../services/news.js";
-import { getOneAllowance, getOneDeduction, getOneSalary, getSalary, removeAllowance, removeDeductions, removeSalary } from "../services/payroll.js";
+import { _assignSalary, createAllowance, createDeduction, createSalary, createSalaryPayment, getAllowance, getDeductions, getEmployeeSalary, getOneAllowance, getOneDeduction, getOneSalary, getSalary, getSalaryPayment, removeAllowance, removeDeductions, removeSalary, removeSalaryPayment } from "../services/payroll.js";
 import {
   getStudentContact,
   getTeacherContact,
@@ -36,7 +36,7 @@ import {
   getTeacherDetails,
 } from "../services/user.js";
 
-//management
+// management
 const fetchAllStudents = async (req, res, next) => {
   try {
     const data = await getStudents();
@@ -190,6 +190,26 @@ const fetchSalary = async (req, res, next) => {
   }
 }
 
+const fetchDeductions = async (req, res, next) => {
+  try {
+    const data = await getDeductions();
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+const fetchAllowances = async (req, res, next) => {
+  try {
+    const data = await getAllowance();
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
 const fetchOneSalary = async (req, res, next) => {
   const id = req.params.salary_id;
   try {
@@ -198,15 +218,43 @@ const fetchOneSalary = async (req, res, next) => {
     const allowances = await getOneAllowance(id);
 
     const data = {
-      ...salary,
-      ...deductions,
-      ...allowances,
+      salary,
+      deductions,
+      allowances,
     }
     res.json(data);
   } catch (error) {
     next(error)
   }
 }
+
+const fetchSalaryPayment = async (req, res, next) => {
+  const values = req.query;
+  try {
+    //sample  values
+    // const values = {
+    //   dateStart: '2022-09-26',
+    //   dateEnd: '2023-02-01',
+    //   all: false,
+    //   term: ""
+    // }
+    const data = await getSalaryPayment(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const fetchEmployeeSalary = async (req, res, next) => {
+  try {
+    const data = await getEmployeeSalary();
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
 
 const addStudent = async (req, res, next) => {
   const values = req.body;
@@ -267,6 +315,40 @@ const addFee = async (req, res, next) => {
   }
 };
 
+const addSalary = async (req, res, next) => {
+  const values = req.body;
+  const deductions = values?.deductions;
+  const allowances = values?.allowances;
+  console.log(values);
+  try {
+    const salary = await createSalary(values);
+    const deductionPromises = deductions?.map((deduction) => {
+      const newDeduction = {
+        ...deduction,
+        salaryId: salary.salaryId
+      }
+      return createDeduction(newDeduction);
+    });
+    const allowancePromises = allowances?.map((allowance) => {
+      const newAllowance = {
+      ...allowance,
+        salaryId: salary.salaryId
+      }
+      return createAllowance(newAllowance);
+    });
+    
+    const results = await Promise.allSettled([
+      ...deductionPromises,
+      ...allowancePromises
+    ]);
+
+    res.json({salary, results});
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const addResult = async (req, res, next) => {
   const values = req.body;
   const marksData = values?.results;
@@ -283,6 +365,19 @@ const addResult = async (req, res, next) => {
   }
 };
 
+const addSalaryPayment = async (req, res, next) => {
+  const values = req.body;
+  console.log(values);
+  try {
+    const data = await createSalaryPayment(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+//not done
 const markAttendance = async (req, res, next) => {
   const values = req.body;
 
@@ -298,6 +393,16 @@ const markAttendance = async (req, res, next) => {
     next(error);
   }
 };
+
+const assignSalary = async (req, res, next) => {
+  const values = req.body;
+  try {
+    const data = await _assignSalary(values);
+    res.json(data);
+  } catch (error) {
+    next(error)
+  }
+}
 
 const updateStudent = async (req, res, next) => {
   const values = req.body;
@@ -405,6 +510,17 @@ const deleteSalary = async (req, res, next) => {
   }
 }
 
+const deleteSalaryPayment = async (req, res, next) => {
+  const id = req.params.payment_id;
+  try {
+    const data = await removeSalaryPayment(id);
+    res.json(data);
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
 //portal
 const fetchNews = async (req, res, next) => {
   try {
@@ -496,7 +612,11 @@ export {
   fetchExtraClasses,
   fetchBusFee,
   fetchSalary,
+  fetchDeductions,
+  fetchAllowances,
   fetchOneSalary,
+  fetchSalaryPayment,
+  fetchEmployeeSalary,
 
   addStudent,
   addStaff,
@@ -504,6 +624,8 @@ export {
   addResult,
   addFee,
   addSubject,
+  addSalary,
+  addSalaryPayment,
 
   updateStudent,
   updateStaff,
@@ -514,8 +636,10 @@ export {
   deleteFee,
   deleteSubject,
   deleteSalary,
+  deleteSalaryPayment,
 
   markAttendance,
+  assignSalary,
 
   fetchNews,
   fetchUserDetails,

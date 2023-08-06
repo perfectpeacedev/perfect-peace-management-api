@@ -1,8 +1,18 @@
-import { Allowance, Deductions, Salary } from "../models/index.js";
+import { Allowance, Deductions, EmployeeSalary, Salary, SalaryPayment, Teacher } from "../models/index.js";
 
 
 const getSalary = async () => {
     const response = await Salary.findAll();
+    return response;
+}
+
+const getDeductions = async () => {
+    const response = await Deductions.findAll();
+    return response;
+}
+
+const getAllowance = async () => {
+    const response = await Allowance.findAll();
     return response;
 }
 
@@ -30,6 +40,42 @@ const getOneAllowance = async (id) => {
             salaryId: id
         }
     });
+    return response;
+}
+
+const getSalaryPayment = async (data) => {
+    const startDate = new Date(data.dateStart).toISOString();
+    const endDate = new Date(data.dateEnd).toISOString();
+
+  if (data.all) {
+    return await SalaryPayment.findAll();
+  } else {
+    return await SalaryPayment.findAll({
+      where: {
+        datePaid: {
+          [Op.gte]: literal(`CONVERT(DATE, '${startDate}', 126)`),
+          [Op.lte]: literal(`CONVERT(DATE, '${endDate}', 126)`),
+        },
+      },
+    });
+  }
+}
+
+const getEmployeeSalary = async () => {
+    const response = await EmployeeSalary.findAll();
+    return response;
+}
+
+const createSalaryPayment = async (data) => {
+    const response = await SalaryPayment.create({
+        name: data?.name,
+        amount: data?.amount,
+        net: data?.net,
+        salaryDate: data?.salaryDate,
+        paymentMethod: data?.paymentMethod,
+        datePaid: Date.now(),
+    });
+
     return response;
 }
 
@@ -64,6 +110,18 @@ const createAllowance = async (data) => {
 }
 
 const removeSalary = async (id) => {
+    const teacher = await Teacher.update(
+        {
+            salaryId: null
+        },
+        {
+            where: {
+                salaryId: id
+            }
+        }
+    );
+    console.log(teacher);
+
     const response = await Salary.destroy({
         where: {
             salaryId: id
@@ -90,12 +148,35 @@ const removeAllowance = async (id) => {
     return response
 }
 
+const removeSalaryPayment = async (id) => {
+    const response = await SalaryPayment.destroy({
+        where: {
+            salaryPaymentId: id
+        }
+    });
+    return response
+}
+
+const _assignSalary = async (data) => {
+    const response = await EmployeeSalary.create({
+        teacherId: data?.teacherId,
+        salaryId: data?.salaryId
+    })
+
+    return response;
+}
+
 export {
     getSalary,
+    getDeductions,
+    getAllowance,
     getOneSalary,
     getOneDeduction,
     getOneAllowance,
-    
+    getSalaryPayment,
+    getEmployeeSalary,
+
+    createSalaryPayment,
     createSalary,
     createDeduction,
     createAllowance,
@@ -103,4 +184,7 @@ export {
     removeSalary,
     removeDeductions,
     removeAllowance,
+    removeSalaryPayment,
+
+    _assignSalary
 }

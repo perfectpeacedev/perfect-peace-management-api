@@ -15,7 +15,7 @@ const createClassAttendance = async (data) => {
     return attendance;
 }
 
-const deleteAttendance = async (data) => {
+const removeAttendance = async (data) => {
     const response = await Attendance.destroy({
         where: {
             class: data?.class,
@@ -37,6 +37,6 @@ const getAttendance = async (data) => {
 
 export {
     createClassAttendance,
-    deleteAttendance,
+    removeAttendance,
     getAttendance
 }
