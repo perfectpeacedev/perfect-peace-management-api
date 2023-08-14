@@ -9,6 +9,7 @@ import {
   addStudent,
   addSubject,
   assignSalary,
+  deleteClass,
   deleteFee,
   deleteResult,
   deleteSalary,
@@ -72,6 +73,7 @@ router.get("/allowances", fetchAllowances);
 router.get("/salary/:salary_id", fetchOneSalary);
 router.get("/salary-payment", fetchSalaryPayment);
 router.get("/employee-salary", fetchEmployeeSalary);
+// router.get("/teachers-weekly-report", fetchWeeklyReport);
 
 router.post("/add-student", addStudent);
 router.post("/add-class", addClass);
@@ -81,6 +83,8 @@ router.post("/add-fee", addFee);
 router.post("/add-subject", addSubject);
 router.post("/add-salary", addSalary);
 router.post("/add-salary-payment", addSalaryPayment);
+// router.post("/ass-teachers-weekly-report", addWeeklyReport);
+// router.post("/add-event", addEvent);
 
 router.post("/mark-attendance", markAttendance);
 router.post("/assign-salary", assignSalary);
@@ -90,6 +94,7 @@ router.put("/update-staff/:teacher_id", updateStaff);
 
 router.delete("/delete-student/:student_id", deleteStudent);
 router.delete("/delete-staff/:teacher_id", deleteStaff);
+router.delete("/delete-class/:class_id", deleteClass);
 router.delete("/delete-staff/:info", deleteResult);
 router.delete("/delete-fee/:fee_id", deleteFee);
 router.delete("/delete-subject/:subject_id", deleteSubject);

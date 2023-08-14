@@ -94,6 +94,7 @@ export const editStudent = async (data, id) => {
             }
         });
 
+        console.log(_class[0]?.dataValues?.class_id)
         const response = await Promise.allSettled([
             Student.update({
                 fName: data.fName,
@@ -103,10 +104,10 @@ export const editStudent = async (data, id) => {
                 gender: data.gender,
                 class: data.class,
                 feesPaid: 0,
-                feesOwing: _class[0]?.fees,
+                feesOwing: _class[0]?.dataValues?.fees,
                 address: data.address,
                 dateRegistered: Date.now(),
-                classId: _class[0]?.classId
+                classId: _class[0]?.dataValues?.class_id
             },
             {
                 where: {

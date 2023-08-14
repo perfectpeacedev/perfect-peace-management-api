@@ -45,12 +45,20 @@ const createBusFee = async (data) => {
 };
 
 const getFeeding = async (data) => {
-    const startDate = new Date(data.dateStart).toISOString();
-    const endDate = new Date(data.dateEnd).toISOString();
-    console.log(data.all)
-  if (data.all) {
+  if (data.all === "true") {
     return await FeedingFee.findAll();
+  } else if (data.startDate === data.endDate) {
+    const startDate = new Date(data.startDate).toISOString();
+    return await FeedingFee.findAll({
+      where: {
+        date: {
+          [Op.eq]: literal(`CONVERT(DATE, '${startDate}', 126)`),
+        },
+      },
+    });
   } else {
+    const startDate = new Date(data.startDate).toISOString();
+    const endDate = new Date(data.endDate).toISOString();
     return await FeedingFee.findAll({
       where: {
         date: {
@@ -63,12 +71,20 @@ const getFeeding = async (data) => {
 };
 
 const getExpense = async (data) => {
-  const startDate = new Date(data.dateStart).toISOString();
-  const endDate = new Date(data.dateEnd).toISOString();
-    console.log(data.all)
-  if (data.all) {
+  if (data.all === "true") {
     return await Expense.findAll();
+  } else if (data.startDate === data.endDate) {
+    const startDate = new Date(data.startDate).toISOString();
+    return await Expense.findAll({
+      where: {
+        date: {
+          [Op.eq]: literal(`CONVERT(DATE, '${startDate}', 126)`),
+        },
+      },
+    });
   } else {
+    const startDate = new Date(data.startDate).toISOString();
+    const endDate = new Date(data.endDate).toISOString();
     return await Expense.findAll({
       where: {
         date: {
@@ -99,8 +115,8 @@ const getExtraClasses = async (data) => {
 };
 
 const getBusFee = async (data) => {
-    const startDate = new Date(data.dateStart).toISOString();
-    const endDate = new Date(data.dateEnd).toISOString();
+  const startDate = new Date(data.dateStart).toISOString();
+  const endDate = new Date(data.dateEnd).toISOString();
 
   if (data.all) {
     return await BusFee.findAll();
@@ -152,18 +168,15 @@ const removeBusFee = async (id) => {
   return response;
 };
 
-
 export {
   createFeeding,
   createExpense,
   createExtraClasses,
   createBusFee,
-
   getFeeding,
   getExpense,
   getExtraClasses,
   getBusFee,
-  
   removeFeeding,
   removeExpense,
   removeExtraClasses,

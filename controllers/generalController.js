@@ -1,6 +1,6 @@
 import { getBusFee, getExpense, getExtraClasses, getFeeding } from "../services/account.js";
 import { createClassAttendance, removeAttendance, getAttendance } from "../services/attendance.js";
-import { createClass } from "../services/classes.js";
+import { createClass, removeClass } from "../services/classes.js";
 import { createFee, getFeesData, getOneFee, removeFee } from "../services/fee.js";
 import { getNews } from "../services/news.js";
 import { _assignSalary, createAllowance, createDeduction, createSalary, createSalaryPayment, getAllowance, getDeductions, getEmployeeSalary, getOneAllowance, getOneDeduction, getOneSalary, getSalary, getSalaryPayment, removeAllowance, removeDeductions, removeSalary, removeSalaryPayment } from "../services/payroll.js";
@@ -521,6 +521,17 @@ const deleteSalaryPayment = async (req, res, next) => {
   }
 }
 
+const deleteClass = async (req, res, next) => {
+  const id = req.params.class_id;
+  try {
+    const data = await removeClass(id);
+    res.json(data);
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
 //portal
 const fetchNews = async (req, res, next) => {
   try {
@@ -637,6 +648,7 @@ export {
   deleteSubject,
   deleteSalary,
   deleteSalaryPayment,
+  deleteClass,
 
   markAttendance,
   assignSalary,
