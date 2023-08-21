@@ -14,7 +14,7 @@ const createFeeding = async (data) => {
 
 const createExpense = async (data) => {
   const response = await Expense.create({
-    expense: data?.name,
+    expense: data?.expense,
     amount: data?.amount,
     date: data?.date,
   });
@@ -97,12 +97,20 @@ const getExpense = async (data) => {
 };
 
 const getExtraClasses = async (data) => {
-  const startDate = new Date(data.dateStart).toISOString();
-  const endDate = new Date(data.dateEnd).toISOString();
-
-  if (data.all) {
+  if (data.all === "true") {
     return await ExtraClasses.findAll();
+  } else if (data.startDate === data.endDate) {
+    const startDate = new Date(data.startDate).toISOString();
+    return await ExtraClasses.findAll({
+      where: {
+        date: {
+          [Op.eq]: literal(`CONVERT(DATE, '${startDate}', 126)`),
+        },
+      },
+    });
   } else {
+    const startDate = new Date(data.startDate).toISOString();
+    const endDate = new Date(data.endDate).toISOString();
     return await ExtraClasses.findAll({
       where: {
         date: {
@@ -115,12 +123,20 @@ const getExtraClasses = async (data) => {
 };
 
 const getBusFee = async (data) => {
-  const startDate = new Date(data.dateStart).toISOString();
-  const endDate = new Date(data.dateEnd).toISOString();
-
-  if (data.all) {
+  if (data.all === "true") {
     return await BusFee.findAll();
+  } else if (data.startDate === data.endDate) {
+    const startDate = new Date(data.startDate).toISOString();
+    return await BusFee.findAll({
+      where: {
+        date: {
+          [Op.eq]: literal(`CONVERT(DATE, '${startDate}', 126)`),
+        },
+      },
+    });
   } else {
+    const startDate = new Date(data.startDate).toISOString();
+    const endDate = new Date(data.endDate).toISOString();
     return await BusFee.findAll({
       where: {
         date: {
@@ -135,7 +151,7 @@ const getBusFee = async (data) => {
 const removeFeeding = async (id) => {
   const response = await FeedingFee.destroy({
     where: {
-      id: id,
+      feeding: id,
     },
   });
   return response;
@@ -144,7 +160,7 @@ const removeFeeding = async (id) => {
 const removeExpense = async (id) => {
   const response = await Expense.destroy({
     where: {
-      id: id,
+      expenseId: id,
     },
   });
   return response;
@@ -153,7 +169,7 @@ const removeExpense = async (id) => {
 const removeExtraClasses = async (id) => {
   const response = await ExtraClasses.destroy({
     where: {
-      id: id,
+      extraClassesId: id,
     },
   });
   return response;
@@ -162,7 +178,7 @@ const removeExtraClasses = async (id) => {
 const removeBusFee = async (id) => {
   const response = await BusFee.destroy({
     where: {
-      id: id,
+      busFeeId: id,
     },
   });
   return response;

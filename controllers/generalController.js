@@ -1,4 +1,4 @@
-import { getBusFee, getExpense, getExtraClasses, getFeeding } from "../services/account.js";
+import { createExpense, createFeeding, createBusFee, createExtraClasses, getBusFee, getExpense, getExtraClasses, getFeeding, removeBusFee, removeExpense, removeExtraClasses, removeFeeding } from "../services/account.js";
 import { createClassAttendance, removeAttendance, getAttendance } from "../services/attendance.js";
 import { createClass, removeClass } from "../services/classes.js";
 import { createFee, getFeesData, getOneFee, removeFee } from "../services/fee.js";
@@ -376,6 +376,52 @@ const addSalaryPayment = async (req, res, next) => {
     next(error);
   }
 };
+const addExpense = async (req, res, next) => {
+  const values = req.body;
+  // console.log(values);
+  try {
+    const data = await createExpense(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const addFeeding = async (req, res, next) => {
+  const values = req.body;
+  // console.log(values);
+  try {
+    const data = await createFeeding(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const addBusFee = async (req, res, next) => {
+  const values = req.body;
+  // console.log(values);
+  try {
+    const data = await createBusFee(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+const addExtraClasses = async (req, res, next) => {
+  const values = req.body;
+  // console.log(values);
+  try {
+    const data = await createExtraClasses(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
 
 //not done
 const markAttendance = async (req, res, next) => {
@@ -532,6 +578,50 @@ const deleteClass = async (req, res, next) => {
   }
 }
 
+const deleteExpense = async (req, res, next) => {
+  const id = req.params.expense_id;
+  try {
+    const data = await removeExpense(id);
+    res.json(data);
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+const deleteFeeding = async (req, res, next) => {
+  const id = req.params.feeding_id;
+  try {
+    const data = await removeFeeding(id);
+    res.json(data);
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+const deleteExtraClasses = async (req, res, next) => {
+  const id = req.params.extraclasses_id;
+  try {
+    const data = await removeExtraClasses(id);
+    res.json(data);
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+const deleteBusFee = async (req, res, next) => {
+  const id = req.params.busfee_id;
+  try {
+    const data = await removeBusFee(id);
+    res.json(data);
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
 //portal
 const fetchNews = async (req, res, next) => {
   try {
@@ -637,6 +727,10 @@ export {
   addSubject,
   addSalary,
   addSalaryPayment,
+  addExpense,
+  addFeeding,
+  addBusFee,
+  addExtraClasses,
 
   updateStudent,
   updateStaff,
@@ -649,6 +743,10 @@ export {
   deleteSalary,
   deleteSalaryPayment,
   deleteClass,
+  deleteExpense,
+  deleteFeeding,
+  deleteExtraClasses,
+  deleteBusFee,
 
   markAttendance,
   assignSalary,

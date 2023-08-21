@@ -1,7 +1,11 @@
 import { Router } from "express";
 import {
+  addBusFee,
   addClass,
+  addExpense,
+  addExtraClasses,
   addFee,
+  addFeeding,
   addResult,
   addSalary,
   addSalaryPayment,
@@ -9,8 +13,12 @@ import {
   addStudent,
   addSubject,
   assignSalary,
+  deleteBusFee,
   deleteClass,
+  deleteExpense,
+  deleteExtraClasses,
   deleteFee,
+  deleteFeeding,
   deleteResult,
   deleteSalary,
   deleteSalaryPayment,
@@ -83,6 +91,10 @@ router.post("/add-fee", addFee);
 router.post("/add-subject", addSubject);
 router.post("/add-salary", addSalary);
 router.post("/add-salary-payment", addSalaryPayment);
+router.post("/add-expense", addExpense);
+router.post("/add-feeding", addFeeding);
+router.post("/add-bus-fee", addBusFee);
+router.post("/add-extra-classes", addExtraClasses);
 // router.post("/ass-teachers-weekly-report", addWeeklyReport);
 // router.post("/add-event", addEvent);
 
@@ -100,6 +112,10 @@ router.delete("/delete-fee/:fee_id", deleteFee);
 router.delete("/delete-subject/:subject_id", deleteSubject);
 router.delete("/delete-salary/:salary_id", deleteSalary);
 router.delete("/delete-salary-payment/:payment_id", deleteSalaryPayment);
+router.delete("/delete-expense/:expense_id", deleteExpense);
+router.delete("/delete-feeding/:feeding_id", deleteFeeding);
+router.delete("/delete-extra-classes/:extraclasses_id", deleteExtraClasses);
+router.delete("/delete-bus-fee/:busfee_id", deleteBusFee);
 
 router.post("/update-password", updatePassword);
 
