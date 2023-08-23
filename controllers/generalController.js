@@ -293,7 +293,6 @@ const addClass = async (req, res, next) => {
 
 const addSubject = async (req, res, next) => {
   const values = req.body;
-  console.log(values);
   try {
     const data = await createSubject(values);
     res.json(data);
