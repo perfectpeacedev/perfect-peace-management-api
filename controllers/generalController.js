@@ -83,13 +83,6 @@ const fetchAttendance = async (req, res, next) => {
 const fetchFees = async (req, res, next) => {
   const values = req.query;
   try {
-    //sample  values
-    // const values = {
-    //   dateStart: '2022-09-26',
-    //   dateEnd: '2023-02-01',
-    //   all: false,
-    //   term: ""
-    // }
     const data = await getFeesData(values);
     res.json(data);
   } catch (error) {

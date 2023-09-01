@@ -3,10 +3,10 @@ import { Op, literal } from "sequelize";
 
 const createFee = async (data) => {
   const response = await Fee.create({
-    studentId: data?.studentId,
-    classId: data?.classId,
+    studentId: data?.studentId, 
+    classId: data?.classId, 
     total: data?.total,
-    paid: data?.paid,
+    paid: data?.currentPaid,
     remaining: data?.remaining,
     paymentMode: data?.paymentMode,
     amountInWords: data?.amountInWords,
@@ -17,7 +17,7 @@ const createFee = async (data) => {
   //update student data
   const updateStudent = await Student.update(
     {
-      feesPaid: data?.paid,
+      feesPaid: data?.totalPaid,
       feesOwing: data?.remaining
     },
     {
@@ -52,25 +52,12 @@ const getOneFee = async (id) => {
 }
 
 const getFeesData = async (data) => {
-  const startDate = new Date(data.dateStart).toISOString();
-  const endDate = new Date(data.dateEnd).toISOString();
-  console.log(startDate);
-
-  if (data.all) {
+  if (data.all === "true") {
     return await Fee.findAll();
-  } else if (data.term) {
-    return await Fee.findAll({
-      where: {
-        datePaid: {
-          [Op.gte]: literal(`CONVERT(DATE, '${startDate}', 126)`),
-          [Op.lte]: literal(`CONVERT(DATE, '${endDate}', 126)`),
-        },
-        term: data.term,
-      },
-    });
   } else {
+    const startDate = new Date(data.startDate).toISOString();
+    const endDate = new Date(data.endDate).toISOString();
     return await Fee.findAll({
-      // limit: 5
       where: {
         datePaid: {
           [Op.gte]: literal(`CONVERT(DATE, '${startDate}', 126)`),
@@ -78,7 +65,7 @@ const getFeesData = async (data) => {
         },
       },
     });
-  }
+  } 
 };
 
 const getFeeCheck = async () => {
