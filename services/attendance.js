@@ -1,25 +1,23 @@
-import { Attendance } from "../models/index.js"
-
+import { Attendance } from "../models/index.js";
 
 const createClassAttendance = async (data) => {
-    const dateEnd = "" // change it and get the data from db
-
     const attendance = await Attendance.create({
         studentId: data?.studentId,
         class: data?.class,
         status: data?.status,
-        dateMarked: data?.dataMarked,
-        dateEnd: dateEnd
+        dateMarked: data?.dateMarked,
+        dateEnd: data?.dateEnd
     });
 
     return attendance;
 }
 
 const removeAttendance = async (data) => {
+    console.log(data)
     const response = await Attendance.destroy({
         where: {
             class: data?.class,
-            dateMarked: data?.dataMarked
+            dateMarked: data?.dateMarked
         }
     })
 
@@ -30,9 +28,12 @@ const getAttendance = async (data) => {
     const response = await Attendance.findAll({
         where: {
             class: data?.class,
-            dateMarked: data?.date
-        }
-    })
+            dateMarked: data?.date,
+        },
+        order: [['studentId', 'ASC']]
+    });
+
+    return response;
 }
 
 export {

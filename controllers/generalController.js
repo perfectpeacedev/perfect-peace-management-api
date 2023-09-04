@@ -23,6 +23,7 @@ import {
   removeStaff,
 } from "../services/staff.js";
 import { createSubject, removeSubject } from "../services/subject.js";
+import { getTerm } from "../services/term.js";
 import {
   createStudent,
   editStudent,
@@ -368,6 +369,7 @@ const addSalaryPayment = async (req, res, next) => {
     next(error);
   }
 };
+
 const addExpense = async (req, res, next) => {
   const values = req.body;
   // console.log(values);
@@ -403,6 +405,7 @@ const addBusFee = async (req, res, next) => {
     next(error);
   }
 };
+
 const addExtraClasses = async (req, res, next) => {
   const values = req.body;
   // console.log(values);
@@ -415,17 +418,29 @@ const addExtraClasses = async (req, res, next) => {
   }
 };
 
-//not done
+//needs more test
 const markAttendance = async (req, res, next) => {
   const values = req.body;
 
   try {
-    // await deleteAttendance(values);
-    // const promises = values?.map((mark) => createClassAttendance(mark));
-    // const results = await Promise.allSettled([
-    //   ...promises
-    // ]);
-    // return results;
+    await removeAttendance(values);
+    const termData = await getTerm();
+    const promises = values.studentAttendance?.map((mark) => {
+      const data = {
+        ...mark,
+        class: values.class,
+        dateMarked: values.dateMarked,
+        dateEnd: termData.dataValues.endDate
+      }
+      // console.log(data)
+      createClassAttendance(data);
+    });
+
+    const results = await Promise.all([
+      ...promises
+    ]);
+
+    res.json(results);
   } catch (error) {
     console.log(error);
     next(error);
@@ -614,6 +629,17 @@ const deleteBusFee = async (req, res, next) => {
   }
 }
 
+const deleteAttendance = async (req, res, next) => {
+  const values = req.body;
+  try {
+    const data = await removeAttendance(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
 //portal
 const fetchNews = async (req, res, next) => {
   try {
@@ -739,6 +765,7 @@ export {
   deleteFeeding,
   deleteExtraClasses,
   deleteBusFee,
+  deleteAttendance,
 
   markAttendance,
   assignSalary,

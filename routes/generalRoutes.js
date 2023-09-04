@@ -13,6 +13,7 @@ import {
   addStudent,
   addSubject,
   assignSalary,
+  deleteAttendance,
   deleteBusFee,
   deleteClass,
   deleteExpense,
@@ -99,6 +100,7 @@ router.post("/add-extra-classes", addExtraClasses);
 // router.post("/add-event", addEvent);
 
 router.post("/mark-attendance", markAttendance);
+router.post("/delete-attendance", deleteAttendance);
 router.post("/assign-salary", assignSalary);
 
 router.put("/update-student/:student_id", updateStudent);
