@@ -47,7 +47,7 @@ const _ = sequelize.define('fee', {
       allowNull: true
     },
     datePaid: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
       field: 'date_paid'
     }
