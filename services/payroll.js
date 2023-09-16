@@ -6,13 +6,21 @@ const getSalary = async () => {
     return response;
 }
 
-const getDeductions = async () => {
-    const response = await Deductions.findAll();
+const getDeductions = async (salary_id) => {
+    const response = await Deductions.findAll({
+        where: {
+            salaryId: salary_id,
+        },
+    });
     return response;
 }
 
-const getAllowance = async () => {
-    const response = await Allowance.findAll();
+const getAllowance = async (salary_id) => {
+    const response = await Allowance.findAll({
+        where: {
+            salaryId: salary_id,
+        },
+    });
     return response;
 }
 
@@ -44,12 +52,11 @@ const getOneAllowance = async (id) => {
 }
 
 const getSalaryPayment = async (data) => {
-    const startDate = new Date(data.dateStart).toISOString();
-    const endDate = new Date(data.dateEnd).toISOString();
-
-  if (data.all) {
+  if (data.all === "true") {
     return await SalaryPayment.findAll();
   } else {
+    const startDate = new Date(data.dateStart).toISOString();
+    const endDate = new Date(data.dateEnd).toISOString();
     return await SalaryPayment.findAll({
       where: {
         datePaid: {
