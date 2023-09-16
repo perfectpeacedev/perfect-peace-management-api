@@ -90,12 +90,9 @@ const signinManagement = async (req, res, next) => {
     const token = await jwt.sign(payload, jwt_secret_key);
     res.status(200).send({
       token: token,
-      user: {
-        username: user.username,
-        email: user.email,
-      },
+      username: user.username,
+      email: user.email,
     });
-    
   } catch (err) {
     console.log(err);
     next(err);
