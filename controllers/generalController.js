@@ -176,7 +176,29 @@ const fetchBusFee = async (req, res, next) => {
 
 const fetchSalary = async (req, res, next) => {
   try {
-    const data = await getSalary();
+    const salaries = await getSalary();
+
+    const data = await Promise.all(
+      salaries?.map(async (salary, index) => {
+        let amount = salary?.dataValues?.amount;
+        let grossAmount = 0;
+        let netAmount = 0;
+
+        const allowancesData = await getAllowance(salary?.dataValues?.salaryId);
+        const allowances = allowancesData ? allowancesData.reduce((acc, curr) => acc + Number(curr.dataValues.amount), 0) : 0;
+        
+        const deductionsData = await getDeductions(salary?.dataValues?.salaryId);
+        const deductions = deductionsData ? deductionsData.reduce((acc, curr) => acc + Number(curr.dataValues.amount), 0) : 0;
+        
+        grossAmount = Number(amount) + Number(allowances);
+        netAmount = grossAmount + Number(deductions);
+        return {
+          ...salary.dataValues,
+          netAmount: netAmount,
+          grossAmount: grossAmount, // Optionally, format the result to two decimal places
+        };
+      })
+    );
     res.json(data);
   } catch (error) {
     console.log(error);
@@ -184,6 +206,7 @@ const fetchSalary = async (req, res, next) => {
   }
 }
 
+//dont use
 const fetchDeductions = async (req, res, next) => {
   try {
     const data = await getDeductions();
@@ -194,6 +217,7 @@ const fetchDeductions = async (req, res, next) => {
   }
 }
 
+//dont use
 const fetchAllowances = async (req, res, next) => {
   try {
     const data = await getAllowance();

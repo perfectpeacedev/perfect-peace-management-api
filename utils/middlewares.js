@@ -36,8 +36,37 @@ const authenticateUser = (req, res, next) => {
 }
 
 
+const authenticateManagementUser = (req, res, next) => {
+
+    try{
+        const authHeader = req.headers.authorization;
+        if (!authHeader){
+            res.status(403);
+            throw Error("No authorization header");
+        }
+
+        const token = authHeader.split(" ")[1];
+        if (!token){
+            res.status(403);
+            throw Error("User not authorized");
+        }
+
+        const user = jwt.verify(token, jwt_secret_key);
+
+        req.params.user = user;
+
+        next();
+
+    }catch(err){
+        next(err);
+    }
+}
+
+
 
 export {
     authenticateUser,
-    undefinedEndpoint
+    undefinedEndpoint,
+
+    authenticateManagementUser,
 }

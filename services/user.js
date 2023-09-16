@@ -1,7 +1,21 @@
 import sequelize from "../config/database.js";
-import { Student, Teacher } from "../models/index.js";
+import { Student, Teacher, UserAccount } from "../models/index.js";
 
 
+const getManagementUser = async (username, password, category) => {
+    const result = await UserAccount.findOne({
+        where: {
+            username: username,
+            password: password,
+            category: category,
+        }
+    })
+
+    return result;
+}
+
+
+//portal
 const getStudentDetails = async (indexNumber) => {
 
     const query = `SELECT TOP 1 *, Student.f_name AS f_name, Student.m_name AS m_name, Student.l_name AS l_name, Parent.f_name AS pf_name, Parent.l_name AS pl_name FROM Student
@@ -111,6 +125,10 @@ const changeStudentPassword = async (id, password) => {
 
 
 export {
+
+    getManagementUser,
+
+    //portal
     getStudentDetails,
     getTeacherDetails,
     getStudentUser,
