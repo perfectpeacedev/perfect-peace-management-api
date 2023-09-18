@@ -371,10 +371,17 @@ const addResult = async (req, res, next) => {
   const marksData = values?.results;
   try {
     const promises = marksData?.map((mark) => createMarksResult(mark));
-    const results = await Promise.allSettled([
+    const results = await Promise.all([
       ...promises,
       createResult(values),
     ]);
+
+    results.forEach((result) => {
+      if (result.status === 'rejected') {
+        console.error(result.reason);
+      }
+    });
+
     return results;
   } catch (error) {
     console.log(error);

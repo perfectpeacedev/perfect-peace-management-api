@@ -24,5 +24,8 @@
     "sequelize-auto": "^0.8.8",
     "stream": "^0.0.2",
     "tedious": "^16.1.0"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.10"
   }
 }
