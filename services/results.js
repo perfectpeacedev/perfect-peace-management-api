@@ -3,19 +3,23 @@ import sequelize from "../config/database.js";
 import { KgAssessment, StudentMarks, StudentResult } from "../models/index.js";
 
 const createMarksResult = async (data) => {
-  const response = await StudentMarks.create({
-    studentId: data?.studentId,
-    subjectId: data?.subjectId,
-    examScore: data?.examMark,
-    classScore: data?.classMark,
-    classScorePercentage: data?.classP,
-    examScorePercentage: data?.examP,
-    totalScore: data?.total,
-    class: data?.class,
-    term: data?.term,
-    date: Date.now(),
-  });
-  return response;
+  if (data.classMark && data.examMark) {
+    const response = await StudentMarks.create({
+      studentId: data?.studentId,
+      subjectId: data?.subjectId,
+      examScore: data?.examMark,
+      classScore: data?.classMark,
+      classScorePercentage: data?.classP,
+      examScorePercentage: data?.examP,
+      totalScore: data?.total,
+      class: data?.class,
+      term: data?.term,
+      date: Date.now(),
+    });
+    return response;
+  } 
+
+  return ""
 };
 
 const createResult = async (data) => {
@@ -102,7 +106,7 @@ const getClassMarks = async (data) => {
   const results = await sequelize.query(query, {
     type: sequelize.QueryTypes.SELECT,
   });
-  
+
   return results;
 };
 
@@ -124,19 +128,20 @@ const getClassResult = async (data) => {
   const response = await StudentResult.findAll({
     attributes: {
       include: [
-        [sequelize.literal('RANK() OVER (ORDER BY raw_score DESC)'), 'position'],
+        [
+          sequelize.literal("RANK() OVER (ORDER BY raw_score DESC)"),
+          "position",
+        ],
       ],
     },
     where: {
       class: data?.class,
       term: data?.term,
-      [Op.and]: [
-        sequelize.literal(`date LIKE '%${data?.year}%'`)
-      ]
+      [Op.and]: [sequelize.literal(`date LIKE '%${data?.year}%'`)],
     },
   });
 
-  return response
+  return response;
 };
 
 const getResults = async (indexNumber) => {
