@@ -109,7 +109,7 @@ router.put("/update-staff/:teacher_id", updateStaff);
 router.delete("/delete-student/:student_id", deleteStudent);
 router.delete("/delete-staff/:teacher_id", deleteStaff);
 router.delete("/delete-class/:class_id", deleteClass);
-router.delete("/delete-staff/:info", deleteResult);
+router.delete("/delete-result/:info", deleteResult);
 router.delete("/delete-fee/:fee_id", deleteFee);
 router.delete("/delete-subject/:subject_id", deleteSubject);
 router.delete("/delete-salary/:salary_id", deleteSalary);

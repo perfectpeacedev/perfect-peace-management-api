@@ -199,7 +199,10 @@ const getResultDetails = async (indexNumber) => {
       AND s.term = Student_result.term
       AND YEAR(s.date) = YEAR(Student_result.date)
       AND s.raw_score > Student_result.raw_score
-    ) AS position
+    ) AS position,
+    (SELECT section FROM Class c 
+      WHERE c.name = Student_result.class
+    ) AS section
     FROM Student_result 
     WHERE student_id = :indexNumber`;
 
