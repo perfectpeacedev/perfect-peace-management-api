@@ -539,13 +539,12 @@ const deleteStaff = async (req, res, next) => {
 };
 
 const deleteResult = async (req, res, next) => {
-  const info = req.params.info;
-  const infoArr = info.split("_");
+  const info = req.query;
   const values = {
-    studentId: infoArr[0],
-    class: infoArr[1],
-    term: infoArr[2],
-    date: infoArr[3],
+    studentId: info?.student_id,
+    class: info?.class,
+    term: info?.term,
+    date: info?.date,
   };
 
   try {
