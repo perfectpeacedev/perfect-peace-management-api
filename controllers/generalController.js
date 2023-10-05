@@ -14,6 +14,8 @@ import {
   createResult,
   getClassMarks,
   getClassResult,
+  getOneStudentMarks,
+  getOneStudentResult,
   removeResult,
 } from "../services/results.js";
 import {
@@ -124,6 +126,34 @@ const fetchClassResult = async (req, res, next) => {
     })
 
     res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const fetchOneStudentResult = async (req, res, next) => {
+  const values = req.query;
+  try {
+    const result = await getOneStudentResult(values);
+    const marks = await getOneStudentMarks(values);
+
+        // const { studentId } = result.dataValues;
+        // const studentMarks = marks.filter((mark) => {
+        //     if (mark.studentId === studentId) {
+        //       return mark;
+        //     }
+        // });
+
+        // return {
+        // ...result.dataValues,
+        //   marks: studentMarks,
+        // };
+
+    res.json({
+      ...result[0]?.dataValues,
+      marks: marks,
+    });
   } catch (error) {
     console.log(error);
     next(error);
@@ -370,19 +400,24 @@ const addResult = async (req, res, next) => {
   const values = req.body;
   const marksData = values?.results;
   try {
-    const promises = marksData?.map((mark) => createMarksResult(mark));
+    const promises = marksData?.map((mark) => createMarksResult({
+      ...mark,
+      class: values.class,
+      term: values.term,
+      studentId: values.studentId
+    }));
     const results = await Promise.all([
       ...promises,
       createResult(values),
     ]);
 
-    results.forEach((result) => {
-      if (result.status === 'rejected') {
-        console.error(result.reason);
-      }
-    });
+    // results.forEach((result) => {
+    //   if (result.status === 'rejected') {
+    //     console.error(result.reason);
+    //   }
+    // });
 
-    return results;
+    res.json(results);
   } catch (error) {
     console.log(error);
     next(error);
@@ -549,7 +584,7 @@ const deleteResult = async (req, res, next) => {
 
   try {
     const data = await removeResult(values);
-    res, json(data);
+    res.json(data);
   } catch (error) {
     console.log(error);
     next(error)
@@ -753,6 +788,7 @@ export {
   fetchAllStaff,
   fetchClassResult,
   fetchClassMarks,
+  fetchOneStudentResult,
   fetchAttendance,
   fetchFees,
   fetchOneFee,

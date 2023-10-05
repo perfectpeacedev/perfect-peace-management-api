@@ -42,6 +42,7 @@ import {
   fetchNews,
   fetchOneFee,
   fetchOneSalary,
+  fetchOneStudentResult,
   fetchSalary,
   fetchSalaryPayment,
   fetchUserDetails,
@@ -65,10 +66,11 @@ router.get("/get-pin", resetPin);
 router.get("/class", fetchClass);
 router.get("/subject", fetchSubject);
 
+router.get("/events", fetchNews);
 router.get("/students", fetchAllStudents);
 router.get("/staff", fetchAllStaff);
 router.get("/student-results", fetchClassResult);
-router.get("/student-marks", fetchClassMarks);
+router.get("/student-marks", fetchOneStudentResult);
 router.get("/student-attendance", fetchAttendance);
 router.get("/fees", fetchFees);
 router.get("/fees/:fee_id", fetchOneFee);
@@ -109,7 +111,7 @@ router.put("/update-staff/:teacher_id", updateStaff);
 router.delete("/delete-student/:student_id", deleteStudent);
 router.delete("/delete-staff/:teacher_id", deleteStaff);
 router.delete("/delete-class/:class_id", deleteClass);
-router.delete("/delete-result/:info", deleteResult);
+router.delete("/delete-result", deleteResult);
 router.delete("/delete-fee/:fee_id", deleteFee);
 router.delete("/delete-subject/:subject_id", deleteSubject);
 router.delete("/delete-salary/:salary_id", deleteSalary);

@@ -5,6 +5,7 @@ import { subjects } from "../services/subject.js";
 const fetchClass = async (req, res, next) => {
     try {
         const data = await classes();
+        console.log(data)
         res.json(data);
     } catch (error) {
         console.log(error)
