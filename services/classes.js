@@ -1,7 +1,24 @@
-import { Class, Teacher } from "../models/index.js";
+import { Class, Student, Teacher } from "../models/index.js";
 
 const classes = async () => {
-  return await Class.findAll();
+  const allClasses = await Class.findAll();
+  const classData = await Promise.all(
+    allClasses.map(async (classItem) => {
+      const classId = classItem.classId;
+
+      const studentCount = await Student.count({
+        where: {
+          classId: classId,
+        },
+      });
+
+      classItem.dataValues.totalStudents = studentCount;
+
+      return classItem;
+    })
+  );
+
+  return classData;
 };
 
 const createClass = async (data) => {

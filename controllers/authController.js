@@ -92,6 +92,8 @@ const signinManagement = async (req, res, next) => {
       token: token,
       username: user.username,
       email: user.email,
+      category: user.category,
+      teacherId: user.teacherId
     });
   } catch (err) {
     console.log(err);

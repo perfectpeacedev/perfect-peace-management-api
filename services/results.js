@@ -1,9 +1,27 @@
 import { Op } from "sequelize";
 import sequelize from "../config/database.js";
 import { KgAssessment, StudentMarks, StudentResult } from "../models/index.js";
+import moment from "moment";
 
 const createMarksResult = async (data) => {
   if (data.classMark && data.examMark) {
+    //delete existing one first
+    const currentYear = new Date().getFullYear();
+    const startDate = moment(`${currentYear}-01-01`, "YYYY-MM-DD").format();
+    const endDate = moment(`${currentYear}-12-31`, "YYYY-MM-DD").format();
+
+    await StudentMarks.destroy({
+      where: {
+        studentId: data?.studentId,
+        class: data?.class,
+        term: data?.term,
+        date: {
+          [Op.gte]: startDate,
+          [Op.lte]: endDate,
+        },
+      },
+    });
+
     const response = await StudentMarks.create({
       studentId: data?.studentId,
       subjectId: data?.subjectId,
@@ -12,17 +30,34 @@ const createMarksResult = async (data) => {
       classScorePercentage: data?.classP,
       examScorePercentage: data?.examP,
       totalScore: data?.total,
+      remarks: data?.remark,
       class: data?.class,
       term: data?.term,
       date: Date.now(),
     });
     return response;
-  } 
+  }
 
-  return ""
+  return "";
 };
 
 const createResult = async (data) => {
+  const currentYear = new Date().getFullYear();
+  const startDate = moment(`${currentYear}-01-01`, "YYYY-MM-DD").format();
+  const endDate = moment(`${currentYear}-12-31`, "YYYY-MM-DD").format();
+
+  await StudentResult.destroy({
+    where: {
+      studentId: data?.studentId,
+      class: data?.class,
+      term: data?.term,
+      date: {
+        [Op.gte]: startDate,
+        [Op.lte]: endDate,
+      },
+    },
+  });
+
   const response = await StudentResult.create({
     studentId: data?.studentId, //
     rawScore: data?.rawScore, //
@@ -110,20 +145,6 @@ const getClassMarks = async (data) => {
   return results;
 };
 
-// const getClassMarks = async (data) => {
-//   const response = await StudentMarks.findAll({
-//     where: {
-//       class: data?.class,
-//       term: data?.term,
-//       [Op.and]: [
-//         sequelize.literal(`date LIKE '%${data?.year}%'`)
-//       ]
-//     },
-//   });
-
-//   return response
-// };
-
 const getClassResult = async (data) => {
   const response = await StudentResult.findAll({
     attributes: {
@@ -142,6 +163,68 @@ const getClassResult = async (data) => {
   });
 
   return response;
+};
+
+const getOneStudentResult = async (data) => {
+  const response = await StudentResult.findAll({
+    attributes: {
+      include: [
+        [
+          sequelize.literal("RANK() OVER (ORDER BY raw_score DESC)"),
+          "position",
+        ],
+      ],
+    },
+    where: {
+      class: data?.class,
+      term: data?.term,
+      [Op.and]: [sequelize.literal(`date LIKE '%${data?.year}%'`)],
+      studentId: data?.studentId,
+    },
+  });
+
+  return response;
+};
+
+const getOneStudentMarks = async (data) => {
+  const query = `
+    SELECT
+      [student_marks_id] AS [studentMarksId],
+      [subject_id] AS [subjectId],
+      [student_id] AS [studentId],
+      [exam_score] AS [examScore],
+      [exam_score_percentage] AS [examScorePercentage],
+      [class_score] AS [classScore],
+      [class_score_percentage] AS [classScorePercentage],
+      [total_score] AS [totalScore],
+      [class],
+      [remarks],
+      [term],
+      [date],
+      (
+        SELECT COUNT(*) + 1 
+        FROM Student_marks s
+        WHERE s.class=Student_marks.class
+        AND s.term=Student_marks.term
+        AND YEAR(s.date)=YEAR(Student_marks.date)
+        AND s.subject_id=Student_marks.subject_id 
+        AND s.total_score > Student_marks.total_score
+    ) AS [subjectPosition]
+    FROM
+      [dbo].[Student_marks]
+    WHERE
+        [date] LIKE '%${data?.year}%'
+      AND [class] = '${data?.class}'
+      AND [term] = '${data?.term}'
+      AND [student_id] = ${data?.studentId}
+  `;
+
+  // const response = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
+  const results = await sequelize.query(query, {
+    type: sequelize.QueryTypes.SELECT,
+  });
+
+  return results;
 };
 
 const getResults = async (indexNumber) => {
@@ -219,6 +302,8 @@ export {
   getResultDetails,
   getClassResult,
   getClassMarks,
+  getOneStudentMarks,
+  getOneStudentResult,
   createMarksResult,
   createResult,
   removeResult,
