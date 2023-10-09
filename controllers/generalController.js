@@ -492,6 +492,7 @@ const markAttendance = async (req, res, next) => {
     await removeAttendance(values);
     const termData = await getTerm();
     const promises = values.studentAttendance?.map((mark) => {
+      console.log(termData)
       const data = {
         ...mark,
         class: values.class,
