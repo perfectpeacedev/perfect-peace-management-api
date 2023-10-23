@@ -57,11 +57,11 @@ const createClass = async (data) => {
         },
       }
     );
-    console.log(updateTeacher);
-    console.log(newClass);
+    // console.log(updateTeacher);
+    // console.log(newClass);
   }
 
-  console.log(newClass);
+  // console.log(newClass);
   return newClass;
 };
 
@@ -102,7 +102,7 @@ const editClass = async (data) => {
         },
       }
     );
-    console.log(updateTeacher);
+    // console.log(updateTeacher);
   }
 
   return newClass;

@@ -22,7 +22,7 @@ const limiter = rateLimit({
 
 app.use(express.json());
 app.use(cors());
-app.use(limiter);
+// app.use(limiter);
 app.use(countRequests);
 
 app.use("/", generalRouter);

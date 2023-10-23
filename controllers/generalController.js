@@ -317,7 +317,7 @@ const addStudent = async (req, res, next) => {
 
 const addStaff = async (req, res, next) => {
   const values = req.body;
-  console.log(values);
+  // console.log(values);
   try {
     const data = await createStaff(values);
     res.json(data);
@@ -329,7 +329,7 @@ const addStaff = async (req, res, next) => {
 
 const addClass = async (req, res, next) => {
   const values = req.body;
-  console.log(values);
+  // console.log(values);
   try {
     const data = await createClass(values);
     res.json(data);
@@ -352,7 +352,7 @@ const addSubject = async (req, res, next) => {
 
 const addFee = async (req, res, next) => {
   const values = req.body;
-  console.log(values);
+  // console.log(values);
   try {
     const data = await createFee(values);
     res.json(data);
@@ -366,7 +366,7 @@ const addSalary = async (req, res, next) => {
   const values = req.body;
   const deductions = values?.deductions;
   const allowances = values?.allowances;
-  console.log(values);
+  // console.log(values);
   try {
     const salary = await createSalary(values);
     const deductionPromises = deductions?.map((deduction) => {
@@ -426,7 +426,7 @@ const addResult = async (req, res, next) => {
 
 const addSalaryPayment = async (req, res, next) => {
   const values = req.body;
-  console.log(values);
+  // console.log(values);
   try {
     const data = await createSalaryPayment(values);
     res.json(data);
@@ -492,7 +492,7 @@ const markAttendance = async (req, res, next) => {
     await removeAttendance(values);
     const termData = await getTerm();
     const promises = values.studentAttendance?.map((mark) => {
-      console.log(termData)
+      // console.log(termData)
       const data = {
         ...mark,
         class: values.class,

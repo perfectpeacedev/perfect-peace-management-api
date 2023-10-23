@@ -27,7 +27,7 @@ const createFee = async (data) => {
     }
   )
 
-  console.log(updateStudent)
+  // console.log(updateStudent)
 
   return response;
 }

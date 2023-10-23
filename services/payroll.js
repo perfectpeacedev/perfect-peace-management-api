@@ -127,7 +127,7 @@ const removeSalary = async (id) => {
             }
         }
     );
-    console.log(teacher);
+    // console.log(teacher);
 
     const response = await Salary.destroy({
         where: {

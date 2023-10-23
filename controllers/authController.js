@@ -16,8 +16,8 @@ const signup = async (req, res, next) => {
   let data;
   try {
     const [role, id] = indexNumber.split("/");
-    console.log(role);
-    console.log(id);
+    // console.log(role);
+    // console.log(id);
     if (role === "STU") {
       data = await studentSignUp(id, password);
     } else if (role === "STAFF") {
@@ -40,11 +40,11 @@ const signin = async (req, res, next) => {
   let user;
   try {
     const [role, id] = indexNumber.split("/");
-    console.log(role);
-    console.log(id);
+    // console.log(role);
+    // console.log(id);
     if (role === "STU") {
       user = await getStudentUser(id, password);
-      console.log(user);
+      // console.log(user);
     } else if (role === "STAFF") {
       user = await getTeacherUser(id, password);
     }
@@ -74,7 +74,7 @@ const signinManagement = async (req, res, next) => {
   const { category, username, password } = req.body;
   try {
     const user = await getManagementUser(username, password, category);
-    console.log(user);
+    // console.log(user);
 
     if (!user) {
       res.status(403);

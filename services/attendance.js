@@ -13,7 +13,7 @@ const createClassAttendance = async (data) => {
 }
 
 const removeAttendance = async (data) => {
-    console.log(data)
+    // console.log(data)
     const response = await Attendance.destroy({
         where: {
             class: data?.class,

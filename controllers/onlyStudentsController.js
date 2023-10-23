@@ -20,7 +20,7 @@ const fetchResults = async (req, res, next) => {
         // Convert the separate arrays into an array of arrays
         const data = Object.values(separateArrays);
 
-        console.log(data)
+        // console.log(data)
         res.json(data);
     } catch (error) {
         console.log(error)

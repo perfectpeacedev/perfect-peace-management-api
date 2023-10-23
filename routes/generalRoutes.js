@@ -57,10 +57,11 @@ import {
   fetchClass,
   fetchSubject,
 } from "../controllers/onlyTeacherController.js";
+import { fetchExpenseGraph, fetchFeesGraph, fetchFeesVsExpenseGraph, fetchIncomeGraph } from "../controllers/graphDataController.js";
 
 const router = Router();
 
-router.get("/news", authenticateUser, fetchNews);
+router.get("/news", fetchNews);
 router.get("/user-details", authenticateUser, fetchUserDetails);
 router.get("/get-pin", resetPin);
 router.get("/class", fetchClass);
@@ -122,5 +123,12 @@ router.delete("/delete-extra-classes/:extraclasses_id", deleteExtraClasses);
 router.delete("/delete-bus-fee/:busfee_id", deleteBusFee);
 
 router.post("/update-password", updatePassword);
+
+
+//graph routes
+router.get("/expense-graph", fetchExpenseGraph);
+router.get("/income-graph", fetchIncomeGraph);
+router.get("/fees-graph", fetchFeesGraph);
+router.get("/fees-vs-expense-graph", fetchFeesVsExpenseGraph);
 
 export { router as generalRouter };

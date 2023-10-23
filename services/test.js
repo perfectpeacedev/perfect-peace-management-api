@@ -94,7 +94,7 @@ export const editStudent = async (data, id) => {
             }
         });
 
-        console.log(_class[0]?.dataValues?.class_id)
+        // console.log(_class[0]?.dataValues?.class_id)
         const response = await Promise.allSettled([
             Student.update({
                 fName: data.fName,
