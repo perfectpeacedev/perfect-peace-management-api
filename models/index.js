@@ -4,6 +4,7 @@ import Assignment from "./Assignment.js";
 import Attendance from "./Attendance.js";
 import BusFee from "./BusFee.js";
 import Class from "./Class.js";
+import ClassFee from "./ClassFee.js";
 import EmployeeSalary from "./EmployeeSalary.js";
 import Event from "./Event.js";
 import Expense from "./Expense.js";
@@ -58,6 +59,8 @@ Teacher.hasMany(EmployeeSalary, {
 Fee.belongsTo(Class, { as: "class", foreignKey: "classId" });
 Class.hasMany(Fee, { as: "classFees", foreignKey: "classId" });
 
+ClassFee.belongsTo(Class, { as: "class", foreignKey: "classId" });
+Class.hasMany(ClassFee, { as: "classFee", foreignKey: "classId" });
 // FeedingFee.belongsTo(Student, { as: 'student', foreignKey: 'studentId' });
 // Student.hasMany(FeedingFee, { as: 'feedingFees', foreignKey: 'studentId' });
 
@@ -145,4 +148,5 @@ export {
   FeeCheck,
   Deductions,
   Term,
+  ClassFee,
 };

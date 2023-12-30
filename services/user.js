@@ -20,13 +20,35 @@ const getManagementUser = async (username, password, category) => {
 //portal
 const getStudentDetails = async (indexNumber) => {
 
-    const query = `SELECT TOP 1 *, Student.f_name AS f_name, Student.m_name AS m_name, Student.l_name AS l_name, Parent.f_name AS pf_name, Parent.l_name AS pl_name FROM Student
-    LEFT JOIN
-      Parent ON Student.parent_id = Parent.parent_id
-    LEFT JOIN
-      Fee ON Student.student_id = Fee.student_id 
-        WHERE Student.student_id = :indexNumber 
-        ORDER BY Fee.fee_id DESC`;
+    const query = `SELECT TOP 1
+    Student.*,
+    Student.student_id,
+    Student.class_id,
+    Student.f_name AS student_f_name,
+    Student.m_name AS student_m_name,
+    Student.l_name AS student_l_name,
+    Parent.f_name AS parent_f_name,
+    Parent.l_name AS parent_l_name,
+    Class.tuition,
+    Class.firstAid,
+    Class.pta,
+    Class.water,
+    Class.maintenance,
+    Class.stationary,
+    Class.cocurricular,
+    Class.fees AS fees
+  FROM
+    Student
+  LEFT JOIN
+    Parent ON Student.parent_id = Parent.parent_id
+  LEFT JOIN
+    Fee ON Student.student_id = Fee.student_id
+  LEFT JOIN
+    Class ON Student.class_id = Class.class_id
+  WHERE
+    Student.student_id = :indexNumber
+  ORDER BY
+    Fee.fee_id DESC`
 
     const results = await sequelize.query(query, {
         replacements: { indexNumber },
