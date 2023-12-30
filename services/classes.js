@@ -1,7 +1,10 @@
-import { Class, Student, Teacher } from "../models/index.js";
+import { Class, ClassFee, Student, Teacher } from "../models/index.js";
 
 const classes = async () => {
+  const classFeeList = await ClassFee.findAll({ raw: true });
+
   const allClasses = await Class.findAll();
+  
   const classData = await Promise.all(
     allClasses.map(async (classItem) => {
       const classId = classItem.classId;
@@ -12,7 +15,10 @@ const classes = async () => {
         },
       });
 
+      const feeList = classFeeList.filter((fee) => fee.classId === classId)
+
       classItem.dataValues.totalStudents = studentCount;
+      classItem.dataValues.feeList = feeList;
 
       return classItem;
     })
@@ -64,6 +70,28 @@ const createClass = async (data) => {
   // console.log(newClass);
   return newClass;
 };
+
+const createClassFee = async (data) => {
+  // console.log("Data::", data);
+  return await ClassFee.create({
+    name: data?.name,
+    amount: data?.amount,
+    classId: data?.classId,
+  });
+}
+
+const editClassFee = async (data) => {
+  // console.log("Data::", data);
+  return await ClassFee.update({
+    name: data?.name,
+    amount: data?.amount,
+  },
+  {
+    where: {
+      classFeeId: data?.classFeeId
+    }
+  });
+}
 
 const editClass = async (data) => {
   const updatedClass = await Class.update(
@@ -129,4 +157,4 @@ const removeClass = async (id) => {
   return deletedClass;
 };
 
-export { createClass, removeClass, classes };
+export { createClass, removeClass, classes, createClassFee, editClassFee };

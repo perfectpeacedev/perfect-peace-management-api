@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   addBusFee,
   addClass,
+  addClassFee,
   addExpense,
   addExtraClasses,
   addFee,
@@ -48,6 +49,7 @@ import {
   fetchUserDetails,
   markAttendance,
   resetPin,
+  updateClassFee,
   updatePassword,
   updateStaff,
   updateStudent,
@@ -99,6 +101,7 @@ router.post("/add-expense", addExpense);
 router.post("/add-feeding", addFeeding);
 router.post("/add-bus-fee", addBusFee);
 router.post("/add-extra-classes", addExtraClasses);
+router.post("/add-class-fee", addClassFee);
 // router.post("/ass-teachers-weekly-report", addWeeklyReport);
 // router.post("/add-event", addEvent);
 
@@ -108,6 +111,7 @@ router.post("/assign-salary", assignSalary);
 
 router.put("/update-student/:student_id", updateStudent);
 router.put("/update-staff/:teacher_id", updateStaff);
+router.put("/update-class-fee/:class_fee_id", updateClassFee);
 
 router.delete("/delete-student/:student_id", deleteStudent);
 router.delete("/delete-staff/:teacher_id", deleteStaff);

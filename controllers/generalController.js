@@ -1,6 +1,6 @@
 import { createExpense, createFeeding, createBusFee, createExtraClasses, getBusFee, getExpense, getExtraClasses, getFeeding, removeBusFee, removeExpense, removeExtraClasses, removeFeeding } from "../services/account.js";
 import { createClassAttendance, removeAttendance, getAttendance } from "../services/attendance.js";
-import { createClass, removeClass } from "../services/classes.js";
+import { createClass, createClassFee, editClassFee, removeClass } from "../services/classes.js";
 import { createFee, getFeesData, getOneFee, removeFee } from "../services/fee.js";
 import { getNews } from "../services/news.js";
 import { _assignSalary, createAllowance, createDeduction, createSalary, createSalaryPayment, getAllowance, getDeductions, getEmployeeSalary, getOneAllowance, getOneDeduction, getOneSalary, getSalary, getSalaryPayment, removeAllowance, removeDeductions, removeSalary, removeSalaryPayment } from "../services/payroll.js";
@@ -350,6 +350,18 @@ const addSubject = async (req, res, next) => {
   }
 };
 
+const addClassFee = async (req, res, next) => {
+  const values = req.body;
+  console.log("Data::", values);
+  try {
+    const data = await createClassFee(values);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const addFee = async (req, res, next) => {
   const values = req.body;
   // console.log(values);
@@ -543,6 +555,18 @@ const updateStaff = async (req, res, next) => {
 
   try {
     const data = await editStaff(values, teacher_id);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const updateClassFee = async (req, res, next) => {
+  const values = req.body;
+
+  try {
+    const data = await editClassFee(values);
     res.json(data);
   } catch (error) {
     console.log(error);
@@ -816,9 +840,11 @@ export {
   addFeeding,
   addBusFee,
   addExtraClasses,
+  addClassFee,
 
   updateStudent,
   updateStaff,
+  updateClassFee,
 
   deleteStudent,
   deleteStaff,
